@@ -1,5 +1,10 @@
 import json
 import os
+import html
+
+# Function to escape XML special characters
+def escape_xml(text):
+    return html.escape(text, quote=False)
 
 # Open the JSON file for reading
 with open('newpipe-subscriptions.json', 'r', encoding='utf-8') as file:
@@ -45,7 +50,8 @@ def create_opml_file(urls_file, names_file, output_file):
         opml_file.write('<body>\n')
 
         for url, name in zip(feed_urls, website_names):
-            opml_file.write(f'    <outline text="{name}" title="{name}" type="rss" xmlUrl="{url}"/>\n')
+            escaped_name = escape_xml(name)
+            opml_file.write(f'    <outline text="{escaped_name}" title="{escaped_name}" type="rss" xmlUrl="{url}"/>\n')
 
         opml_file.write('</body>\n')
         opml_file.write('</opml>\n')

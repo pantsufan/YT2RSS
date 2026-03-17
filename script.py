@@ -1,13 +1,23 @@
 import json
 import os
 import html
+import glob
 
 # Function to escape XML special characters
 def escape_xml(text):
     return html.escape(text, quote=False)
 
+# Find the JSON file - look for newpipe_subscriptions_*.json files
+json_files = glob.glob('newpipe_subscriptions_*.json')
+if json_files:
+    # Use the most recent file (by modification time)
+    json_file = max(json_files, key=os.path.getmtime)
+else:
+    print("Error: No newpipe_subscriptions_*.json file found!")
+    exit(1)
+
 # Open the JSON file for reading
-with open('newpipe-subscriptions.json', 'r', encoding='utf-8') as file:
+with open(json_file, 'r', encoding='utf-8') as file:
     # Load the data into a variable
     subscriptions = json.load(file)
 
